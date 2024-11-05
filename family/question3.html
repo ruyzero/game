@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME START</title>
+    <link rel="stylesheet" href="game.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body style="background-color: rgb(38, 50, 223);">
+
+    <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="row w-100 mt-5 mb-5">
+            <div class="col-6 d-flex justify-content-center">
+                <div class="team-card p-4 text-center">
+                    <h2>TEAM 1</h2>
+                    <div id="team1-scoreboard">Score: <span id="team1-score">0</span></div>
+                    <input type="number" id="team1-input" placeholder="Enter points" class="form-control mt-2">
+                    <button onclick="updateScore('team1')" class="btn btn-primary mt-2">Update Score</button>
+                    <button onclick="clearScore('team1')" class="btn btn-danger mt-2">Clear Score</button>
+                    <button onclick="revertScore('team1')" class="btn btn-secondary mt-2">Revert Score</button>
+                </div>
+            </div>
+            <div class="col-6 d-flex justify-content-center">
+                <div class="team-card p-4 text-center">
+                    <h2>TEAM 2</h2>
+                    <div id="team2-scoreboard">Score: <span id="team2-score">0</span></div>
+                    <input type="number" id="team2-input" placeholder="Enter points" class="form-control mt-2">
+                    <button onclick="updateScore('team2')" class="btn btn-primary mt-2">Update Score</button>
+                    <button onclick="clearScore('team2')" class="btn btn-danger mt-2">Clear Score</button>
+                    <button onclick="revertScore('team1')" class="btn btn-secondary mt-2">Revert Score</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row w-100 d-flex justify-content-center">
+            <div class="col-8">
+                <div class="question-card p-4 text-center">
+                    <h3>3. Name a reason someone might be running late.</h3>
+                    <div class="d-flex flex-wrap justify-content-center mt-3">
+                        <!-- Flippable Cards -->
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Pizza - 40</div>
+                            </div>
+                        </div>
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Burger - 30</div>
+                            </div>
+                        </div>
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Fried chicken - 15</div>
+                            </div>
+                        </div>
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Tacos - 10
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Sandwich - 5
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flippable-card mx-2 my-2">
+                            <div class="flippable-inner">
+                                <div class="card-front">#</div>
+                                <div class="card-back">Answer 6</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center justify-content-center mt-4 d-flex flex-column">
+                    <div class="col">
+                        <a href="game.html">
+                            <button class="pushable">
+                                <span class="shadow"></span>
+                                <span class="edge"></span>
+                                <span class="front"> NEXT QUESTION </span>
+                              </button>                              
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row w-100">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="wrong-answer-buttons text-center">
+                <h3>Wrong</h3>
+                <button id="wrong-button" class="btn btn-danger mx-1" onclick="wrongAnswer()">X</button>
+                <button id="wrong-button" class="btn btn-danger mx-1" onclick="wrongAnswer()">X</button>
+                <button id="wrong-button" class="btn btn-danger mx-1" onclick="wrongAnswer()">X</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <audio controls autoplay src="song.mp3"></audio>
+        </div>
+    </div>
+
+    <div class="row align-content-center justify-content-center align-items-center">
+        <div class="col">
+            <a href="index.html">
+                <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front"> RESTART GAME </span>
+                  </button>    
+            </a>
+        </div>
+    </div>
+
+</div>
+
+    <script>
+        // JavaScript for flipping effect
+        document.querySelectorAll('.flippable-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        
+        let teamScores = { team1: 0, team2: 0 };
+        let lastScores = { team1: 0, team2: 0 }; // Store last scores for revert functionality
+
+        function updateScore(team) {
+            let inputElement = document.getElementById(`${team}-input`);
+            let scoreElement = document.getElementById(`${team}-score`);
+            let points = parseInt(inputElement.value) || 0;
+
+            // Store the last score before updating
+            lastScores[team] = teamScores[team];
+
+            teamScores[team] += points;
+            scoreElement.textContent = teamScores[team];
+
+            inputElement.value = ''; // Clear input field after updating score
+        }
+        function clearScore(team) {
+            // Store the last score before clearing
+            lastScores[team] = teamScores[team];
+            teamScores[team] = 0;
+            document.getElementById(`${team}-score`).textContent = teamScores[team];
+        }
+
+        function revertScore(team) {
+            // Revert to the last score if available
+            teamScores[team] = lastScores[team];
+            document.getElementById(`${team}-score`).textContent = teamScores[team];
+        }
+        let wrongAnswerCount = 0; // Initialize the count for wrong answers
+
+// Function to play the buzzer sound
+function playBuzzerSound() {
+    const audio = new Audio('buzzer-sound.mp3'); // Adjust the path if needed
+    audio.play().catch(error => {
+        console.error('Error playing sound:', error);
+    });
+}
+
+// Function to handle wrong answer clicks
+function handleWrongAnswer(button) {
+    if (wrongAnswerCount < 3) {
+        wrongAnswerCount++;
+        playBuzzerSound(); // Play the buzzer sound
+        button.classList.add('wrong'); // Change the button style to indicate it's been clicked
+        
+        if (wrongAnswerCount === 3) {
+            disableWrongAnswerButtons(); // Disable buttons after 3 wrong answers
+        }
+    }
+}
+
+// Function to disable all wrong answer buttons
+function disableWrongAnswerButtons() {
+    const buttons = document.querySelectorAll('.wrong-answer-buttons button');
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+}
+
+// Add event listeners to all wrong answer buttons
+const buttons = document.querySelectorAll('.wrong-answer-buttons button');
+buttons.forEach(button => {
+    button.addEventListener('click', () => handleWrongAnswer(button));
+});
+    </script>
+    
+
+   
+</body>
+</html>
